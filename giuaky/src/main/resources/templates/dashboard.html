@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+</head>
+<body class="container mt-3">
+
+    <!-- Thanh tiêu đề & Logout -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Dashboard - Quản lý sản phẩm (Tổng: <span th:text="${totalProducts}">0</span>)</h3>
+        <div>
+            Xin chào, <b th:text="${session.currentUser.fullname}">User</b> |
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Đăng xuất</a>
+        </div>
+    </div>
+
+    <!-- Form Thêm / Sửa trực tiếp trên trang -->
+    <form th:action="@{/products/save}" th:object="${product}" method="post" class="border p-3 mb-3">
+        <h5 th:text="*{id} != null ? 'Chỉnh sửa sản phẩm #' + *{id} : 'Thêm sản phẩm mới'"></h5>
+        <input type="hidden" th:field="*{id}">
+        <input type="text" th:field="*{name}" class="form-control mb-2" placeholder="Tên sản phẩm" required>
+        <input type="number" th:field="*{price}" class="form-control mb-2" placeholder="Giá bán" required>
+        <input type="text" th:field="*{description}" class="form-control mb-2" placeholder="Mô tả">
+        <button type="submit" class="btn btn-success">Lưu</button>
+        <a th:href="@{/dashboard}" class="btn btn-secondary">Làm mới</a>
+    </form>
+
+    <!-- Tìm kiếm -->
+    <form th:action="@{/dashboard}" method="get" class="d-flex mb-3 gap-2">
+        <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Tìm kiếm theo tên sản phẩm...">
+        <button type="submit" class="btn btn-primary">Tìm</button>
+        <a th:href="@{/dashboard}" class="btn btn-secondary">Tất cả</a>
+    </form>
+
+    <!-- Bảng danh sách sản phẩm -->
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Mô tả</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${products}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.name}"></td>
+                <td th:text="${p.price}"></td>
+                <td th:text="${p.description}"></td>
+                <td>
+                    <a th:href="@{/dashboard(editId=${p.id})}" class="btn btn-warning btn-sm">Sửa</a>
+                    <a th:href="@{/products/delete/{id}(id=${p.id})}" 
+                       onclick="return confirm('Bạn có muốn xóa?');" 
+                       class="btn btn-danger btn-sm">Xóa</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(products)}">
+                <td colspan="5" class="text-center text-muted">Không có sản phẩm nào!</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

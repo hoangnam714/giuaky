@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+</head>
+<body class="container mt-5" style="max-width: 380px;">
+    <h3 class="mb-3">Đăng Nhập</h3>
+    <div th:if="${param.registered}" class="alert alert-success py-1">Đăng ký thành công! Hãy đăng nhập.</div>
+    <div th:if="${error}" class="alert alert-danger py-1" th:text="${error}"></div>
+
+    <form th:action="@{/login}" method="post">
+        <input type="text" name="username" class="form-control mb-2" placeholder="Tài khoản (admin)" required>
+        <input type="password" name="password" class="form-control mb-2" placeholder="Mật khẩu (123456)" required>
+        <button type="submit" class="btn btn-primary w-100 mb-2">Đăng nhập</button>
+    </form>
+    <a th:href="@{/register}">Chưa có tài khoản? Đăng ký</a>
+</body>
+</html>
